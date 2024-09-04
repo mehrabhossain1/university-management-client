@@ -29,7 +29,7 @@ Example 2: The below code removes the elements from array using pop() method unt
 
 // Declare and initialize an array
 let array = ["pop", "splice", "filter", "shift"];
-console.log("Original array: " + array);
+// console.log("Original array: " + array);
 
 // Loop run while array length not zero
 while (array.length > 1) {
