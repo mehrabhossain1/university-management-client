@@ -6,7 +6,7 @@ const numbers = [1, 2, 3, 4, 5]; // Output should be 15
  * */
 
 const numbers = [1, 2, 3, 4, 5];
-const sum = numbers.reduce((acc, curr) => acc + curr, 0);
+const sum = numbers.reduce((acc, item) => acc + item, 0);
 // console.log(sum);
 
 // Problem 2: Product of Numbers
@@ -14,14 +14,14 @@ const sum = numbers.reduce((acc, curr) => acc + curr, 0);
 
 const numbers2 = [2, 3, 4]; // Output should be 24
 
-const product = numbers2.reduce((acc, curr) => acc * curr, 1);
+const product = numbers2.reduce((acc, item) => acc * item, 1);
 // console.log(product);
 
 const arr = [1, 2, 3, 4, 5];
 
-const sum2 = arr.reduce((acc, curr) => {
-  //   console.log(acc, curr);
-  acc.push(curr);
+const sum2 = arr.reduce((acc, item) => {
+  //   console.log(acc, item);
+  acc.push(item);
   return acc;
 }, []);
 // console.log(sum2);
@@ -29,7 +29,7 @@ const sum2 = arr.reduce((acc, curr) => {
 export const adminPaths2 = [
   {
     name: "Dashboard",
-    path: "/admin/dashboard",
+    path: "dashboard",
     element: "ADMIN_DASHBOARD",
   },
   {
@@ -37,25 +37,40 @@ export const adminPaths2 = [
     children: [
       {
         name: "Create Admin",
-        path: "/admin/create-admin",
+        path: "create-admin",
         element: "CREATE_ADMIN",
       },
       {
         name: "Create Faculty",
-        path: "/admin/create-faculty",
+        path: "create-faculty",
         element: "CREATE_FACULTY",
       },
       {
         name: "Create student",
-        path: "/admin/create-student",
+        path: "create-student",
         element: "CREATE_STUDENT",
       },
     ],
   },
 ];
 
-const newArray = adminPaths2.reduce((acc, curr) => {
-  acc.push(curr);
+const newArray = adminPaths2.reduce((acc, item) => {
+  if (item.path && item.element) {
+    acc.push({
+      path: item.path,
+      element: item.element,
+    });
+  }
+
+  if (item.children) {
+    item.children.forEach((child) => {
+      acc.push({
+        path: child.path,
+        element: child.element,
+      });
+    });
+  }
+
   return acc;
 }, []);
 
