@@ -1,24 +1,32 @@
-import {
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-} from "@ant-design/icons";
 import { Layout, Menu, theme } from "antd";
-import { createElement } from "react";
 import { Outlet } from "react-router-dom";
 
 const { Header, Content, Footer, Sider } = Layout;
 
 const items = [
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
-  UserOutlined,
-].map((icon, index) => ({
-  key: String(index + 1),
-  icon: createElement(icon),
-  label: `nav ${index + 1}`,
-}));
+  {
+    key: "Dashboard",
+    label: "Dashboard",
+  },
+  {
+    key: "User Management",
+    label: "User Management",
+    children: [
+      {
+        key: "Student",
+        label: "Student",
+      },
+      {
+        key: "Admin",
+        label: "Admin",
+      },
+      {
+        key: "Faculty",
+        label: "Faculty",
+      },
+    ],
+  },
+];
 
 const MainLayout = () => {
   const {
@@ -37,7 +45,12 @@ const MainLayout = () => {
           console.log(collapsed, type);
         }}
       >
-        <div className="demo-logo-vertical" />
+        <div className="demo-logo-vertical">
+          <h1 style={{ color: "white", textAlign: "center" }}>
+            University Management
+          </h1>
+        </div>
+
         <Menu
           theme="dark"
           mode="inline"

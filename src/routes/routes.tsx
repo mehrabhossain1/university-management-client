@@ -23,12 +23,14 @@ const router = createBrowserRouter([
     element: <App />,
     children: adminPaths,
   },
+
   // Student Routes
   {
     path: "/student",
     element: <App />,
     children: adminPaths,
   },
+
   {
     path: "/login",
     element: <Login />,

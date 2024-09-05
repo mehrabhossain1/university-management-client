@@ -15,4 +15,48 @@ const sum = numbers.reduce((acc, curr) => acc + curr, 0);
 const numbers2 = [2, 3, 4]; // Output should be 24
 
 const product = numbers2.reduce((acc, curr) => acc * curr, 1);
-console.log(product);
+// console.log(product);
+
+const arr = [1, 2, 3, 4, 5];
+
+const sum2 = arr.reduce((acc, curr) => {
+  //   console.log(acc, curr);
+  acc.push(curr);
+  return acc;
+}, []);
+// console.log(sum2);
+
+export const adminPaths2 = [
+  {
+    name: "Dashboard",
+    path: "/admin/dashboard",
+    element: "ADMIN_DASHBOARD",
+  },
+  {
+    name: "User Management",
+    children: [
+      {
+        name: "Create Admin",
+        path: "/admin/create-admin",
+        element: "CREATE_ADMIN",
+      },
+      {
+        name: "Create Faculty",
+        path: "/admin/create-faculty",
+        element: "CREATE_FACULTY",
+      },
+      {
+        name: "Create student",
+        path: "/admin/create-student",
+        element: "CREATE_STUDENT",
+      },
+    ],
+  },
+];
+
+const newArray = adminPaths2.reduce((acc, curr) => {
+  acc.push(curr);
+  return acc;
+}, []);
+
+console.log(newArray);
