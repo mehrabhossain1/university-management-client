@@ -13,6 +13,7 @@ const userRole = {
 };
 
 const Sidebar = () => {
+  // ! Handle Sidebar Items and Role here
   const role = "student";
 
   let sidebarItems;
