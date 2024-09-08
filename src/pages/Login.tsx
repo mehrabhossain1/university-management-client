@@ -4,14 +4,18 @@ import { useLoginMutation } from "../redux/features/auth/authApi";
 import { useAppDispatch } from "../redux/hooks";
 import { setUser } from "../redux/features/auth/authSlice";
 import { verifyToken } from "../utils/verifyToken";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const Login = () => {
   const { handleSubmit, register } = useForm();
   const [login] = useLoginMutation();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const onSubmit = async (data) => {
     console.log("onsubmit data", data);
+    toast.loading("Logging in...");
 
     const userInfo = {
       id: data.id,
@@ -22,6 +26,7 @@ const Login = () => {
     const user = verifyToken(res.data.accessToken);
 
     dispatch(setUser({ user: user, token: res.data.accessToken }));
+    navigate(`${user.role}/dashboard`);
   };
 
   return (
