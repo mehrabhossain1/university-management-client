@@ -28,9 +28,7 @@ const Login = () => {
       const user = verifyToken(res.data.accessToken) as TUser;
 
       dispatch(setUser({ user: user, token: res.data.accessToken }));
-
       toast.success("Login successful", { id: toastId, duration: 2000 });
-
       navigate(`/${user.role}/dashboard`);
     } catch (err: any) {
       toast.error("Something went wrong", { id: toastId, duration: 2000 });
