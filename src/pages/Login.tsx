@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "antd";
-import { FieldValues, useForm } from "react-hook-form";
+import { FieldValues, useForm, useFormContext } from "react-hook-form";
 import { useLoginMutation } from "../redux/features/auth/authApi";
 import { useAppDispatch } from "../redux/hooks";
 import { setUser, TUser } from "../redux/features/auth/authSlice";
@@ -9,12 +9,15 @@ import { verifyToken } from "../utils/verifyToken";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import ReusableForm from "../components/form/ReusableForm";
+import ReusableInput from "../components/form/ReusableInput";
 
 const Login = () => {
-  const { handleSubmit, register } = useForm();
-  const [login] = useLoginMutation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  // const { handleSubmit, register } = useForm();
+
+  const [login] = useLoginMutation();
 
   const onSubmit = async (data: FieldValues) => {
     console.log(data);
@@ -40,12 +43,10 @@ const Login = () => {
   return (
     <ReusableForm onSubmit={onSubmit}>
       <div>
-        <label htmlFor="id">ID: </label>
-        <input type="text" id="id" {...register("id")} />
+        <ReusableInput type="text" name="id" label="ID: " />
       </div>
       <div>
-        <label htmlFor="password">Password: </label>
-        <input type="text" id="password" {...register("password")} />
+        <ReusableInput type="text" name="password" label="Password: " />
       </div>
       <Button htmlType="submit">Login</Button>
     </ReusableForm>
