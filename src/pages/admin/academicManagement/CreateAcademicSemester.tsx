@@ -1,8 +1,22 @@
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import ReusableForm from "../../../components/form/ReusableForm";
-import ReusableInput from "../../../components/form/ReusableInput";
 import { Button, Col, Flex } from "antd";
 import ReusableSelect from "../../../components/form/ReusableSelect";
+
+const nameOptions = [
+  {
+    value: "01",
+    label: "Autumn",
+  },
+  {
+    value: "02",
+    label: "Summer",
+  },
+  {
+    value: "03",
+    label: "Fall",
+  },
+];
 
 const CreateAcademicSemester = () => {
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
@@ -13,9 +27,11 @@ const CreateAcademicSemester = () => {
     <Flex justify="center" align="center">
       <Col span={6}>
         <ReusableForm onSubmit={onSubmit}>
-          <ReusableInput type="text" name="name" label="Semester Name" />
-          <ReusableInput type="text" name="year" label="Semester Year" />
-          <ReusableSelect />
+          <ReusableSelect
+            label="Semester Name"
+            name="name"
+            options={nameOptions}
+          />
           <Button htmlType="submit">Submit</Button>
         </ReusableForm>
       </Col>

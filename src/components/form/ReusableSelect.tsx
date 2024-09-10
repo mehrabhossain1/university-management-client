@@ -1,21 +1,22 @@
 import { Form, Select } from "antd";
+import { Controller } from "react-hook-form";
 
-const ReusableSelect = ({ label }) => {
-  const handleChange = (value: string) => {
-    console.log(value);
-  };
+type TReusableSelectProps = {
+  label: string;
+  name: string;
+  options: { value: string; label: string; disabled?: boolean }[];
+};
 
+const ReusableSelect = ({ label, name, options }: TReusableSelectProps) => {
   return (
-    <Form.Item label={label}>
-      <Select
-        style={{ width: "100%" }}
-        onChange={handleChange}
-        options={[
-          { value: "jack", label: "Jack" },
-          { value: "jack", label: "Jack" },
-        ]}
-      />
-    </Form.Item>
+    <Controller
+      name={name}
+      render={({ field }) => (
+        <Form.Item label={label}>
+          <Select style={{ width: "100%" }} {...field} options={options} />
+        </Form.Item>
+      )}
+    />
   );
 };
 
