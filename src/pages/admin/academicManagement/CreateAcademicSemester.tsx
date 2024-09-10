@@ -2,38 +2,20 @@ import { FieldValues, SubmitHandler } from "react-hook-form";
 import ReusableForm from "../../../components/form/ReusableForm";
 import { Button, Col, Flex } from "antd";
 import ReusableSelect from "../../../components/form/ReusableSelect";
-
-const nameOptions = [
-  {
-    value: "01",
-    label: "Autumn",
-  },
-  {
-    value: "02",
-    label: "Summer",
-  },
-  {
-    value: "03",
-    label: "Fall",
-  },
-];
-
-// For year options
-const currentYear = new Date().getFullYear();
-const yearOptions = [0, 1, 2, 3, 4].map((number) => ({
-  value: String(currentYear + number),
-  label: String(currentYear + number),
-}));
-// For year options
-
+import { semesterOptions } from "../../../constants/semester";
+import { monthOptions, yearOptions } from "../../../constants/global";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { academicSemesterSchema } from "../../../schemas/academicManagement.schema";
 const CreateAcademicSemester = () => {
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    const name = nameOptions[Number(data?.name) - 1]?.label;
+    const name = semesterOptions[Number(data?.name) - 1]?.label;
 
     const semesterData = {
       name,
       code: data.name,
       year: data.year,
+      startMonth: data.startMonth,
+      endMonth: data.endMonth,
     };
 
     console.log(semesterData);
@@ -42,22 +24,25 @@ const CreateAcademicSemester = () => {
   return (
     <Flex justify="center" align="center">
       <Col span={6}>
-        <ReusableForm onSubmit={onSubmit}>
+        <ReusableForm
+          onSubmit={onSubmit}
+          resolver={zodResolver(academicSemesterSchema)}
+        >
           <ReusableSelect
             label="Semester Name"
             name="name"
-            options={nameOptions}
+            options={semesterOptions}
           />
           <ReusableSelect label="Year" name="year" options={yearOptions} />
           <ReusableSelect
             label="Start Month"
             name="startMonth"
-            options={nameOptions}
+            options={monthOptions}
           />
           <ReusableSelect
             label="End Month"
             name="endMonth"
-            options={nameOptions}
+            options={monthOptions}
           />
           <Button htmlType="submit">Submit</Button>
         </ReusableForm>

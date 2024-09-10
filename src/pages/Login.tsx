@@ -17,6 +17,11 @@ const Login = () => {
 
   const [login] = useLoginMutation();
 
+  const defaultValues = {
+    id: "A-0001",
+    password: "admin123",
+  };
+
   const onSubmit = async (data: FieldValues) => {
     console.log(data);
     const toastId = toast.loading("Logging in...");
@@ -40,7 +45,7 @@ const Login = () => {
 
   return (
     <Row justify={"center"} align={"middle"} style={{ height: "100vh" }}>
-      <ReusableForm onSubmit={onSubmit}>
+      <ReusableForm onSubmit={onSubmit} defaultValues={defaultValues}>
         <ReusableInput type="text" name="id" label="ID: " />
         <ReusableInput type="text" name="password" label="Password: " />
         <Button htmlType="submit">Login</Button>

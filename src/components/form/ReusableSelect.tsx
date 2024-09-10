@@ -11,7 +11,7 @@ const ReusableSelect = ({ label, name, options }: TReusableSelectProps) => {
   return (
     <Controller
       name={name}
-      render={({ field }) => (
+      render={({ field, fieldState: { error } }) => (
         <Form.Item label={label}>
           <Select
             style={{ width: "100%" }}
@@ -19,6 +19,7 @@ const ReusableSelect = ({ label, name, options }: TReusableSelectProps) => {
             options={options}
             size="large"
           />
+          {error && <p style={{ color: "red" }}>{error.message}</p>}
         </Form.Item>
       )}
     />
