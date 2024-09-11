@@ -1,4 +1,4 @@
-import { Table, TableColumnsType, TableProps } from "antd";
+import { Button, Table, TableColumnsType, TableProps } from "antd";
 import { useGetAllSemestersQuery } from "../../../redux/features/admin/academicManagement.api";
 import { TAcademicSemester } from "../../../types/academicManagement.type";
 import { useState } from "react";
@@ -10,13 +10,9 @@ export type TTableData = Pick<
 >;
 
 const AcademicSemester = () => {
-  const [params, setParams] = useState([]);
+  const [params, setParams] = useState<TQueryParam[] | undefined>(undefined);
 
-  const {
-    data: semesterData,
-    isLoading,
-    isFetching,
-  } = useGetAllSemestersQuery(params);
+  const { data: semesterData, isFetching } = useGetAllSemestersQuery(params);
 
   const tableData = semesterData?.data?.map(
     ({ _id, name, year, startMonth, endMonth }) => ({
@@ -30,7 +26,7 @@ const AcademicSemester = () => {
 
   const columns: TableColumnsType<TTableData> = [
     {
-      title: "Name",
+      title: "SemesterName",
       key: "name",
       dataIndex: "name",
       showSorterTooltip: { target: "full-header" },
@@ -86,12 +82,24 @@ const AcademicSemester = () => {
       key: "endMonth",
       dataIndex: "endMonth",
     },
+    {
+      title: "Action",
+      key: "x",
+      render: () => {
+        return (
+          <div style={{ display: "flex", gap: "10px" }}>
+            <Button>Update</Button>
+            <Button>Delete</Button>
+          </div>
+        );
+      },
+    },
   ];
 
   const onChange: TableProps<TTableData>["onChange"] = (
-    pagination,
+    _pagination, //! Underscore for not using right now
     filters,
-    sorter,
+    _sorter,
     extra
   ) => {
     if (extra.action === "filter") {
