@@ -9,7 +9,7 @@ const academicManagementApi = baseApi.injectEndpoints({
         const params = new URLSearchParams();
 
         if (args) {
-          args.foreach((item) => {
+          args.forEach((item) => {
             params.append(item.name, item.value);
           });
         }
@@ -20,7 +20,6 @@ const academicManagementApi = baseApi.injectEndpoints({
           params: params,
         };
       },
-
       transformResponse: (response: TResponseRedux<TAcademicSemester[]>) => {
         return {
           data: response.data,

@@ -26,6 +26,7 @@ const AcademicSemester = () => {
   const columns: TableColumnsType<TTableData> = [
     {
       title: "Name",
+      key: "name",
       dataIndex: "name",
       showSorterTooltip: { target: "full-header" },
       filters: [
@@ -45,14 +46,39 @@ const AcademicSemester = () => {
     },
     {
       title: "Year",
+      key: "year",
       dataIndex: "year",
+      filters: [
+        {
+          text: "2024",
+          value: "2024",
+        },
+        {
+          text: "2025",
+          value: "2025",
+        },
+        {
+          text: "2026",
+          value: "2026",
+        },
+        {
+          text: "2027",
+          value: "2027",
+        },
+        {
+          text: "2028",
+          value: "2028",
+        },
+      ],
     },
     {
       title: "Start Month",
+      key: "startMonth",
       dataIndex: "startMonth",
     },
     {
       title: "End Month",
+      key: "endMonth",
       dataIndex: "endMonth",
     },
   ];
@@ -66,9 +92,15 @@ const AcademicSemester = () => {
     if (extra.action === "filter") {
       const queryParams = [];
 
+      // To Filter by name
       filters.name?.forEach((item) =>
         queryParams.push({ name: "name", value: item })
       );
+      // To Filter by year
+      filters.year?.forEach((item) =>
+        queryParams.push({ name: "year", value: item })
+      );
+
       setParams(queryParams);
     }
   };
