@@ -1,15 +1,16 @@
 import { Table, TableColumnsType, TableProps } from "antd";
 import { useGetAllSemestersQuery } from "../../../redux/features/admin/academicManagement.api";
+import { TAcademicSemester } from "../../../types/academicManagement.type";
 
-interface DataType {
-  key: React.Key;
-  name: string;
-  year: string;
-  address: string;
-}
+export type TTableData = Pick<
+  TAcademicSemester,
+  "_id" | "name" | "year" | "startMonth" | "endMonth"
+>;
 
 const AcademicSemester = () => {
-  const { data: semesterData } = useGetAllSemestersQuery(undefined);
+  const { data: semesterData } = useGetAllSemestersQuery([
+    { name: "name", value: "Autumn" },
+  ]);
   console.log(semesterData);
 
   const tableData = semesterData?.data?.map(
@@ -22,7 +23,7 @@ const AcademicSemester = () => {
     })
   );
 
-  const columns: TableColumnsType<DataType> = [
+  const columns: TableColumnsType<TTableData> = [
     {
       title: "Name",
       dataIndex: "name",
@@ -41,53 +42,22 @@ const AcademicSemester = () => {
           value: "Fall",
         },
       ],
-      // specify the condition of filtering result
-      // here is that finding the name started with `value`
-      onFilter: (value, record) => record.name.indexOf(value as string) === 0,
-      sorter: (a, b) => a.name.length - b.name.length,
-      sortDirections: ["descend"],
     },
     {
       title: "Year",
       dataIndex: "year",
-      defaultSortOrder: "descend",
-      sorter: (a, b) => a.year - b.year,
     },
     {
       title: "Start Month",
       dataIndex: "startMonth",
-      filters: [
-        {
-          text: "London",
-          value: "London",
-        },
-        {
-          text: "New York",
-          value: "New York",
-        },
-      ],
-      onFilter: (value, record) =>
-        record.startMonth.indexOf(value as string) === 0,
     },
     {
       title: "End Month",
       dataIndex: "endMonth",
-      filters: [
-        {
-          text: "London",
-          value: "London",
-        },
-        {
-          text: "New York",
-          value: "New York",
-        },
-      ],
-      onFilter: (value, record) =>
-        record.address.indexOf(value as string) === 0,
     },
   ];
 
-  const onChange: TableProps<DataType>["onChange"] = (
+  const onChange: TableProps<TTableData>["onChange"] = (
     pagination,
     filters,
     sorter,
