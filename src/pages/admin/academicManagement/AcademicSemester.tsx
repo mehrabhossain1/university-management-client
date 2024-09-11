@@ -2,6 +2,7 @@ import { Table, TableColumnsType, TableProps } from "antd";
 import { useGetAllSemestersQuery } from "../../../redux/features/admin/academicManagement.api";
 import { TAcademicSemester } from "../../../types/academicManagement.type";
 import { useState } from "react";
+import { TQueryParam } from "../../../types";
 
 export type TTableData = Pick<
   TAcademicSemester,
@@ -11,7 +12,11 @@ export type TTableData = Pick<
 const AcademicSemester = () => {
   const [params, setParams] = useState([]);
 
-  const { data: semesterData } = useGetAllSemestersQuery(params);
+  const {
+    data: semesterData,
+    isLoading,
+    isFetching,
+  } = useGetAllSemestersQuery(params);
 
   const tableData = semesterData?.data?.map(
     ({ _id, name, year, startMonth, endMonth }) => ({
@@ -90,7 +95,7 @@ const AcademicSemester = () => {
     extra
   ) => {
     if (extra.action === "filter") {
-      const queryParams = [];
+      const queryParams: TQueryParam[] = [];
 
       // To Filter by name
       filters.name?.forEach((item) =>
@@ -107,6 +112,7 @@ const AcademicSemester = () => {
 
   return (
     <Table
+      loading={isFetching}
       columns={columns}
       dataSource={tableData}
       onChange={onChange}
