@@ -5,6 +5,7 @@ import { Button, Col, Divider, Row } from "antd";
 import ReusableSelect from "../../../components/form/ReusableSelect";
 import { bloodGroupOptions, genderOptions } from "../../../constants/global";
 import ReusableDatePicker from "../../../components/form/ReusableDatePicker";
+import { useGetAllSemestersQuery } from "../../../redux/features/admin/academicManagement.api";
 
 const studentDummyData = {
   password: "student123",
@@ -54,7 +55,7 @@ const studentDefaultValues = {
     lastName: "Number 1",
   },
   gender: "male",
-  dateOfBirth: "1990-01-01",
+
   bloogGroup: "A+",
 
   email: "student2@gmail.com",
@@ -84,6 +85,16 @@ const studentDefaultValues = {
 };
 
 const CreateStudent = () => {
+  const { data: semesterData, isLoading: isSemesterLoading } =
+    useGetAllSemestersQuery(undefined);
+
+  console.log(semesterData, isSemesterLoading);
+
+  const semesterOptions = semesterData?.data?.map((item) => ({
+    value: item._id,
+    label: `${item.name} - ${item.year}`,
+  }));
+
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     console.log(data);
 
@@ -259,6 +270,23 @@ const CreateStudent = () => {
 
           {/* Academic Info */}
           <Divider>Academic Info</Divider>
+          <Row gutter={8}>
+            <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
+              <ReusableSelect
+                options={semesterOptions}
+                disabled={isSemesterLoading}
+                name="academicSemester"
+                label="Academic Semester"
+              />
+            </Col>
+            <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
+              {/* <ReusableInput
+                type="text"
+                name="localGuardian.occupation"
+                label="Local Guardian Occupation"
+              /> */}
+            </Col>
+          </Row>
           <Button htmlType="submit">Submit</Button>
         </ReusableForm>
       </Col>
