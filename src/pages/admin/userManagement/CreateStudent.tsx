@@ -5,7 +5,10 @@ import { Button, Col, Divider, Row } from "antd";
 import ReusableSelect from "../../../components/form/ReusableSelect";
 import { bloodGroupOptions, genderOptions } from "../../../constants/global";
 import ReusableDatePicker from "../../../components/form/ReusableDatePicker";
-import { useGetAllSemestersQuery } from "../../../redux/features/admin/academicManagement.api";
+import {
+  useGetAcademicDepartmentsQuery,
+  useGetAllSemestersQuery,
+} from "../../../redux/features/admin/academicManagement.api";
 
 const studentDummyData = {
   password: "student123",
@@ -80,19 +83,26 @@ const studentDefaultValues = {
     address: "789 Pine St, Villageton",
   },
 
-  admissionSemester: "65b0104110b74fcbd7a25d92",
-  academicDepartment: "65b00fb010b74fcbd7a25d8e",
+  // admissionSemester: "65b0104110b74fcbd7a25d92",
+  // academicDepartment: "65b00fb010b74fcbd7a25d8e",
 };
 
 const CreateStudent = () => {
   const { data: semesterData, isLoading: isSemesterLoading } =
     useGetAllSemestersQuery(undefined);
 
-  console.log(semesterData, isSemesterLoading);
+  const { data: departmentData, isLoading: isDepartmentLoading } =
+    useGetAcademicDepartmentsQuery(undefined, { skip: isSemesterLoading });
+  //* It will call the "departmentData" after the "semesterData" for skipping isSemesterLoading
 
   const semesterOptions = semesterData?.data?.map((item) => ({
     value: item._id,
     label: `${item.name} - ${item.year}`,
+  }));
+
+  const departmentOptions = departmentData?.data?.map((item) => ({
+    value: item._id,
+    label: item.name,
   }));
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
@@ -275,16 +285,17 @@ const CreateStudent = () => {
               <ReusableSelect
                 options={semesterOptions}
                 disabled={isSemesterLoading}
-                name="academicSemester"
-                label="Academic Semester"
+                name="admissionSemester"
+                label="Admission Semester"
               />
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
-              {/* <ReusableInput
-                type="text"
-                name="localGuardian.occupation"
-                label="Local Guardian Occupation"
-              /> */}
+              <ReusableSelect
+                options={departmentOptions}
+                disabled={isDepartmentLoading}
+                name="academicDepartment"
+                label="Academic Department"
+              />
             </Col>
           </Row>
           <Button htmlType="submit">Submit</Button>
