@@ -1,23 +1,22 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { FieldValues, SubmitHandler } from "react-hook-form";
-import ReusableForm from "../../../components/form/ReusableForm";
 import { Button, Col, Flex } from "antd";
-import ReusableSelect from "../../../components/form/ReusableSelect";
-import { semesterOptions } from "../../../constants/semester";
-import { monthOptions, yearOptions } from "../../../constants/global";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { academicSemesterSchema } from "../../../schemas/academicManagement.schema";
+import { FieldValues, SubmitHandler } from "react-hook-form";
 import { toast } from "sonner";
+import ReusableDatePicker from "../../../components/form/ReusableDatePicker";
+import ReusableForm from "../../../components/form/ReusableForm";
+import ReusableInput from "../../../components/form/ReusableInput";
+import ReusableSelect from "../../../components/form/ReusableSelect";
+import { semesterStatusOptions } from "../../../constants/semester";
 import { useGetAllSemestersQuery } from "../../../redux/features/admin/academicManagement.api";
+import { useAddRegisteredSemesterMutation } from "../../../redux/features/admin/courseManagement.api";
+import { TResponse } from "../../../types";
 
 const SemesterRegistration = () => {
+  const [addSemester] = useAddRegisteredSemesterMutation();
+
   const { data: academicSemester } = useGetAllSemestersQuery([
-    {
-      name: "sort",
-      value: "year",
-    },
+    { name: "sort", value: "year" },
   ]);
-  console.log(academicSemester);
 
   const academicSemesterOptions = academicSemester?.data?.map((item) => ({
     value: item._id,
@@ -27,53 +26,46 @@ const SemesterRegistration = () => {
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const toastId = toast.loading("Creating semester...");
 
-    const name = semesterOptions[Number(data?.name) - 1]?.label;
-
     const semesterData = {
-      name,
-      code: data.name,
-      year: data.year,
-      startMonth: data.startMonth,
-      endMonth: data.endMonth,
+      ...data,
+      minCredit: Number(data.minCredit),
+      maxCredit: Number(data.maxCredit),
     };
 
     console.log(semesterData);
 
-    // try {
-    //   const res = (await addAcademicSemester(semesterData)) as TResponse;
+    try {
+      const res = (await addSemester(semesterData)) as TResponse<any>;
 
-    //   if (res.error) {
-    //     toast.error(res.error.data.message, { id: toastId });
-    //   } else {
-    //     toast.success("Semester created successfully", { id: toastId });
-    //   }
-    // } catch (err: any) {
-    //   toast.error("Something went wrong", { id: toastId });
-    // }
+      if (res.error) {
+        toast.error(res.error.data.message, { id: toastId });
+      } else {
+        toast.success("Semester created successfully", { id: toastId });
+      }
+    } catch (err: any) {
+      toast.error("Something went wrong", { id: toastId });
+    }
   };
 
   return (
     <Flex justify="center" align="center">
       <Col span={6}>
-        <ReusableForm
-          onSubmit={onSubmit}
-          resolver={zodResolver(academicSemesterSchema)}
-        >
+        <ReusableForm onSubmit={onSubmit}>
           <ReusableSelect
-            label="Semester Name"
-            name="name"
+            label="Academic Semester"
+            name="academicSemester"
             options={academicSemesterOptions}
           />
           <ReusableSelect
-            label="Start Month"
-            name="startMonth"
-            options={monthOptions}
+            label="Status"
+            name="status"
+            options={semesterStatusOptions}
           />
-          <ReusableSelect
-            label="End Month"
-            name="endMonth"
-            options={monthOptions}
-          />
+          <ReusableDatePicker label="Start Date" name="startDate" />
+          <ReusableDatePicker label="End Date" name="endDate" />
+
+          <ReusableInput type="text" name="minCredit" label="Minimum Credit" />
+          <ReusableInput type="text" name="maxCredit" label="Maximum Credit" />
           <Button htmlType="submit">Submit</Button>
         </ReusableForm>
       </Col>
