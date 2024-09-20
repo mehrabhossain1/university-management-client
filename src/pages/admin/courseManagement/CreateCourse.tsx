@@ -2,20 +2,17 @@
 import { Button, Col, Flex } from "antd";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import { toast } from "sonner";
-import ReusableDatePicker from "../../../components/form/ReusableDatePicker";
 import ReusableForm from "../../../components/form/ReusableForm";
 import ReusableInput from "../../../components/form/ReusableInput";
 import ReusableSelect from "../../../components/form/ReusableSelect";
-import { semesterStatusOptions } from "../../../constants/semester";
-import { useGetAllSemestersQuery } from "../../../redux/features/admin/academicManagement.api";
 import {
-  useAddRegisteredSemesterMutation,
+  useAddCourseMutation,
   useGetAllCoursesQuery,
 } from "../../../redux/features/admin/courseManagement.api";
 import { TResponse } from "../../../types";
 
 const CreateCourse = () => {
-  const [addSemester] = useAddRegisteredSemesterMutation();
+  const [createCourse] = useAddCourseMutation();
 
   const { data: coursesData } = useGetAllCoursesQuery(undefined);
 
@@ -29,27 +26,31 @@ const CreateCourse = () => {
 
     const courseData = {
       ...data,
+      code: Number(data.code),
+      credits: Number(data.credits),
       isDeleted: false,
-      preRequisiteCourses: data.preRequisiteCourses.map((item) => ({
-        course: item,
-        isDeleted: false,
-      })),
+      preRequisiteCourses: data.preRequisiteCourses
+        ? data?.preRequisiteCourses?.map((item) => ({
+            course: item,
+            isDeleted: false,
+          }))
+        : [],
     };
 
     console.log(courseData);
 
-    // try {
-    //   const res = (await addSemester(courseData)) as TResponse<any>;
-    //   console.log(res);
+    try {
+      const res = (await createCourse(courseData)) as TResponse<any>;
+      console.log(res);
 
-    //   if (res.error) {
-    //     toast.error(res.error.data.message, { id: toastId });
-    //   } else {
-    //     toast.success("Semester created successfully", { id: toastId });
-    //   }
-    // } catch (err: any) {
-    //   toast.error("Something went wrong", { id: toastId });
-    // }
+      if (res.error) {
+        toast.error(res.error.data.message, { id: toastId });
+      } else {
+        toast.success("Course created successfully", { id: toastId });
+      }
+    } catch (err: any) {
+      toast.error("Something went wrong", { id: toastId });
+    }
   };
 
   return (
