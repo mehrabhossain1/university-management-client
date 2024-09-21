@@ -1,9 +1,11 @@
 import { Button, Modal, Table } from "antd";
-import { useGetAllCoursesQuery } from "../../../redux/features/admin/courseManagement.api";
+import {
+  useAddFacultiesMutation,
+  useGetAllCoursesQuery,
+} from "../../../redux/features/admin/courseManagement.api";
 import { useState } from "react";
 import ReusableForm from "../../../components/form/ReusableForm";
 import ReusableSelect from "../../../components/form/ReusableSelect";
-import { useGetAcademicFacultiesQuery } from "../../../redux/features/admin/academicManagement.api";
 import { useGetAllFacultiesQuery } from "../../../redux/features/admin/userManagement.api";
 
 const Courses = () => {
@@ -33,7 +35,7 @@ const Courses = () => {
       title: "Action",
       key: "x",
       render: (item) => {
-        return <AddFacultyModal data={item} />;
+        return <AddFacultyModal facultyInfo={item} />;
       },
     },
   ];
@@ -62,12 +64,13 @@ const Courses = () => {
   );
 };
 
-const AddFacultyModal = ({ data }) => {
-  console.log(data);
+const AddFacultyModal = ({ facultyInfo }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { data: facultiesData } = useGetAllFacultiesQuery(undefined);
   console.log(facultiesData);
+
+  const [addFaculties] = useAddFacultiesMutation();
 
   const facultiesOption = facultiesData?.data?.map((item) => ({
     value: item._id,
@@ -75,15 +78,15 @@ const AddFacultyModal = ({ data }) => {
   }));
 
   const handleSubmit = (data) => {
-    console.log(data);
+    const facultyData = {
+      courseId: facultyInfo.key,
+      data,
+    };
+    addFaculties(facultyData);
   };
 
   const showModal = () => {
     setIsModalOpen(true);
-  };
-
-  const handleOk = () => {
-    setIsModalOpen(false);
   };
 
   const handleCancel = () => {
@@ -96,8 +99,8 @@ const AddFacultyModal = ({ data }) => {
       <Modal
         title="Basic Modal"
         open={isModalOpen}
-        onOk={handleOk}
         onCancel={handleCancel}
+        footer={null}
       >
         <ReusableForm onSubmit={handleSubmit}>
           <ReusableSelect
