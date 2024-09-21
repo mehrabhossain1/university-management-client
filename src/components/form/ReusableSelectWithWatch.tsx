@@ -1,4 +1,5 @@
 import { Form, Select } from "antd";
+import { useEffect } from "react";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 
 type TReusableSelectProps = {
@@ -7,6 +8,7 @@ type TReusableSelectProps = {
   options: { value: string; label: string; disabled?: boolean }[] | undefined;
   disabled?: boolean;
   mode?: "multiple" | undefined;
+  onValueChange: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const ReusableSelectWithWatch = ({
@@ -15,13 +17,17 @@ const ReusableSelectWithWatch = ({
   options,
   disabled,
   mode,
+  onValueChange,
 }: TReusableSelectProps) => {
   const { control } = useFormContext();
   const inputValue = useWatch({
     control,
     name,
   });
-  console.log(inputValue);
+
+  useEffect(() => {
+    onValueChange(inputValue);
+  }, [inputValue]);
 
   return (
     <Controller

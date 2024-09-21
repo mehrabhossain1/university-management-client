@@ -3,8 +3,13 @@ import ReusableForm from "../../../components/form/ReusableForm";
 import ReusableInput from "../../../components/form/ReusableInput";
 import { useGetAcademicFacultiesQuery } from "../../../redux/features/admin/academicManagement.api";
 import ReusableSelectWithWatch from "../../../components/form/ReusableSelectWithWatch";
+import { useState } from "react";
+import { FieldValues, SubmitHandler } from "react-hook-form";
 
 const OfferCourse = () => {
+  const [id, setId] = useState("");
+  console.log("inside parent component", id);
+
   const { data: academicFacultyData } = useGetAcademicFacultiesQuery(undefined);
 
   const academicSemesterOptions = academicFacultyData?.data?.map((item) => ({
@@ -12,7 +17,7 @@ const OfferCourse = () => {
     label: item.name,
   }));
 
-  const onSubmit = (data) => {
+  const onSubmit: SubmitHandler<FieldValues> = (data) => {
     console.log(data);
   };
 
@@ -21,12 +26,12 @@ const OfferCourse = () => {
       <Col span={6}>
         <ReusableForm onSubmit={onSubmit}>
           <ReusableSelectWithWatch
+            onValueChange={setId}
             label="Academic Semester"
             name="academicSemester"
             options={academicSemesterOptions}
           />
-          <ReusableInput type="text" name="test" label="Test" />
-
+          <ReusableInput disabled={!id} type="text" name="test" label="Test" />
           <Button htmlType="submit">Submit</Button>
         </ReusableForm>
       </Col>
