@@ -4,7 +4,8 @@ import { adminPaths } from "../../routes/admin.routes";
 import { facultyPaths } from "../../routes/faculty.routes";
 import { studentPaths } from "../../routes/student.routes";
 import { useAppSelector } from "../../redux/hooks";
-import { selectCurrentUser } from "../../redux/features/auth/authSlice";
+import { TUser, useCurrentToken } from "../../redux/features/auth/authSlice";
+import { verifyToken } from "../../utils/verifyToken";
 
 const { Sider } = Layout;
 
@@ -15,11 +16,22 @@ const userRole = {
 };
 
 const Sidebar = () => {
-  const user = useAppSelector(selectCurrentUser);
+  //! It's not safe
+  // const user = useAppSelector(selectCurrentUser);
+
+  const token = useAppSelector(useCurrentToken);
+
+  //* It's safe
+  let user;
+  if (token) {
+    user = verifyToken(token);
+  }
+
   let sidebarItems;
 
   //! Not null assertion because it won't render before the user is come
-  switch (user!.role) {
+  //* This TUser is from authSlice
+  switch ((user as TUser)!.role) {
     case userRole.ADMIN:
       sidebarItems = sidebarItemsGenerator(adminPaths, userRole.ADMIN);
       break;
